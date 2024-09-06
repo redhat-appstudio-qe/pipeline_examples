@@ -1,0 +1,32 @@
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: simple-pipeline
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: e2e 
+spec:
+  description: Simple Pipeline
+  params:
+    - name: message
+      type: string
+      default: "hello world"
+  tasks:
+    - name: hello-world 
+      params:
+        - name: MESSAGE 
+          value: "$(params.message)"
+      taskSpec:
+        params:
+          - name: MESSAGE
+            type: string
+        steps:
+          - name: echo-message 
+            image: registry.access.redhat.com/ubi9/ubi:9.4-1214
+            script: |
+              #!/usr/bin/env sh
+
+              echo $(params.MESSAGE) 
