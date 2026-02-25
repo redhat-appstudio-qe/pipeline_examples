@@ -1,0 +1,22 @@
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: failing-pipeline
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: e2e, fail
+spec:
+  description: Simple Pipeline that will fail
+  tasks:
+    - name: fail-task
+      taskSpec:
+        steps:
+          - name: fail
+            image: registry.access.redhat.com/ubi9/ubi:9.4-1214
+            script: |
+              #!/usr/bin/env sh
+
+              exit 1
